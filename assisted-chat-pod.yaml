@@ -21,6 +21,14 @@ spec:
           value: assisted-chat
         - name: ASSISTED_CHAT_POSTGRES_NAME
           value: assisted-chat
+        - name: VLLM_URL
+          value: ${VLLM_URL}
+        - name: VLLM_API_TOKEN
+          value: ${VLLM_API_TOKEN}
+        - name: VLLM_TLS_VERIFY
+          value: true
+        - name: VLLM_REFRESH_MODELS
+          value: false
       ports:
         - containerPort: 8090
           hostPort: 8090
@@ -47,6 +55,9 @@ spec:
       env:
         - name: TRANSPORT
           value: streamable-http
+      ports:
+        - containerPort: 8000
+          hostPort: 8000
     - name: ui
       image: localhost/local-ai-chat-ui
       env:
@@ -103,6 +114,7 @@ spec:
           value: assisted-chat
       ports:
         - containerPort: 5432
+          hostPort: 5432
       volumeMounts:
         - name: pgdata
           mountPath: /var/lib/pgsql/data
