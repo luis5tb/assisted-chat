@@ -96,7 +96,14 @@ async def test_mcp_tools(client, model_id):
     ocm_token = os.getenv("OCM_TOKEN")
 
     try:
-        # This should trigger the MCP tools that are configured
+        # This should trigger the MCP tools that are configure
+        """
+        curl -X POST http://localhost:8090/v1/query -H "Content-Type: application/json" -H "Authorization: Bearer ${OCM_TOKEN}" -d '{
+            "query": "What assisted installer clusters do I have? Please use tools to get real data.",
+            "model": "openai/gpt-oss-20b",
+            "provider": "vllm"
+        }'
+        """
         response = await client.responses.create(
             input="What assisted installer clusters do I have? Please use tools to get real data.",
             model=model_id,
@@ -202,6 +209,7 @@ async def main():
         #  CUDA_DEVICE_ORDER=PCI_BUS_ID vllm serve openai/gpt-oss-20b --tool-call-parser openai --reasoning-parser openai_gptoss --enable-auto-tool-choice 
         test_model = "vllm/openai/gpt-oss-20b"
         #test_model = "Qwen/Qwen3-8B"
+        #test_model = "gemini/gemini-2.0-flash"
         print(f"🎯 Using model '{test_model}' for testing...\n")
         
         # Test inference API
