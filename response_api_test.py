@@ -213,7 +213,7 @@ async def main():
         print(f"🎯 Using model '{test_model}' for testing...\n")
         
         # Test inference API
-        #await test_inference_api(client, test_model)
+        await test_inference_api(client, test_model)
         
         # Test responses API (what lightspeed-stack uses)
         #await test_responses_api(client, test_model)

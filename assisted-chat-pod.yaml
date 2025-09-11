@@ -55,6 +55,8 @@ spec:
       env:
         - name: TRANSPORT
           value: streamable-http
+        - name: OFFLINE_TOKEN
+          value: ${OCM_REFRESH_TOKEN}
       ports:
         - containerPort: 8000
           hostPort: 8000
@@ -96,6 +98,8 @@ spec:
           value: ${GEMINI_API_KEY}
         - name: OCM_TOKEN
           value: ${OCM_TOKEN}
+        - name: OCM_REFRESH_TOKEN
+          value: ${OCM_REFRESH_TOKEN}
       volumeMounts:
         - mountPath: /mcpconfig.json
           name: config
