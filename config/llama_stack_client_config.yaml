@@ -25,7 +25,14 @@ providers:
       tls_verify: ${env.VLLM_TLS_VERIFY:=true}
       refresh_models: ${env.VLLM_REFRESH_MODELS:=false}
   vector_io: []
-  files: []
+  files:
+  - provider_id: meta-reference-files
+    provider_type: inline::localfs
+    config:
+      storage_dir: ${env.FILES_STORAGE_DIR:=~/.llama/distributions/starter/files}
+      metadata_store:
+        type: sqlite
+        db_path: ${env.SQLITE_STORE_DIR:=~/.llama/distributions/starter}/files_metadata.db
   safety: []
   agents:
   - provider_id: meta-reference
@@ -80,19 +87,19 @@ inference_store:
   password: ${env.POSTGRES_PASSWORD:=assisted-chat}
 models:
 - metadata: {}
-  model_id: gemini/gemini-2.0-flash
+  model_id: gemini-2.0-flash
   provider_id: gemini
-  provider_model_id: gemini/gemini-2.0-flash
+  provider_model_id: gemini-2.0-flash
   model_type: llm
 - metadata: {}
-  model_id: gemini/gemini-2.5-pro
+  model_id: gemini-2.5-pro
   provider_id: gemini
-  provider_model_id: gemini/gemini-2.5-pro
+  provider_model_id: gemini-2.5-pro
   model_type: llm
 - metadata: {}
-  model_id: gemini/gemini-2.5-flash
+  model_id: gemini-2.5-flash
   provider_id: gemini
-  provider_model_id: gemini/gemini-2.5-flash
+  provider_model_id: gemini-2.5-flash
   model_type: llm
 #- metadata: {}
 #  model_id: Qwen2.5-VL-7B-Instruct
@@ -120,7 +127,6 @@ tool_groups:
 - toolgroup_id: mcp::assisted
   provider_id: model-context-protocol
   mcp_endpoint:
-    #uri: "http://assisted-service-mcp:8000/mcp"
-    uri: "http://0.0.0.0:8000/mcp"
+    uri: "http://assisted-service-mcp:8000/mcp"
 server:
   port: 8321
