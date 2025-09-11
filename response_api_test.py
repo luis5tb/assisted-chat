@@ -298,7 +298,6 @@ async def main():
         # Test responses API (what lightspeed-stack uses)
         #await test_responses_api(client, test_model)
 
-
         # Test with MCP tools (if you want to test tool integration)
         # Note: This will only work if the MCP server is running
         print("🤔 Testing MCP tools with chained queries (requires assisted-service-mcp container to be running)")

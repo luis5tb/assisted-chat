@@ -102,6 +102,8 @@ spec:
           value: ${GEMINI_API_KEY}
         - name: OCM_TOKEN
           value: ${OCM_TOKEN}
+        - name: OCM_REFRESH_TOKEN
+          value: ${OCM_REFRESH_TOKEN}
       volumeMounts:
         - mountPath: /mcpconfig.json
           name: config
