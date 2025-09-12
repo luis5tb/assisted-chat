@@ -55,8 +55,6 @@ spec:
       env:
         - name: TRANSPORT
           value: streamable-http
-        - name: OFFLINE_TOKEN
-          value: ${OCM_REFRESH_TOKEN}
       ports:
         - containerPort: 8000
           hostPort: 8000
