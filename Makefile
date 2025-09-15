@@ -8,7 +8,10 @@ NAMESPACE ?= assisted-chat
 	build-images \
 	build-inspector build-assisted-mcp build-lightspeed-stack build-lightspeed-plus-llama-stack build-ui \
 	deploy-template ci-test deploy-template-local run-k8s stop-k8s rm-k8s logs-k8s load-images \
-	generate run resume stop rm logs query query-int query-stage query-prod query-interactive query-k8s query-k8s-curl delete mcphost test-eval test-eval-k8s psql sqlite transcript-summaries-prod help
+	generate run resume stop rm logs query query-int query-stage query-prod query-interactive \
+	query-k8s query-k8s-curl query_v2 query_v2-int query_v2-stage query_v2-prod \
+	streaming_query streaming_query_v2 delete delete_v2 mcphost test-eval test-eval-k8s \
+	psql sqlite transcript-summaries-prod help
 
 all: help ## Show help information
 
@@ -106,7 +109,7 @@ query-prod: ## Query the assisted-chat services (production environment)
 	QUERY_ENV=prod ./scripts/query.sh
 
 query-k8s: ## Query the assisted-chat services via k8s port-forward on localhost:8090
-	@echo "Hint: ensure a port-forward is running: oc port-forward -n $(NAMESPACE) svc/assisted-chat 8090:8090" 
+	@echo "Hint: ensure a port-forward is running: oc port-forward -n $(NAMESPACE) svc/assisted-chat 8090:8090"
 	QUERY_ENV=k8s ./scripts/query.sh
 
 query-k8s-curl: ## Non-interactive k8s query via curl (default: "Show me all my clusters")
@@ -115,9 +118,38 @@ query-k8s-curl: ## Non-interactive k8s query via curl (default: "Show me all my 
 query-interactive: query ## Query the assisted-chat services (deprecated, use 'query')
 	@echo "WARNING: 'query-interactive' is deprecated. Use 'make query' instead."
 
-delete: ## Delete a conversation from assisted-chat services
-	@echo "Deleting conversation from assisted-chat services..."
+query_v2: ## Query the assisted-chat services using Response API v2 (localhost)
+	@echo "Querying assisted-chat services using Response API v2 (localhost)..."
+	./scripts/query_v2.sh
+
+query_v2-int: ## Query the assisted-chat services using Response API v2 (integration environment)
+	@echo "Querying assisted-chat services using Response API v2 (integration environment)..."
+	QUERY_ENV=int ./scripts/query_v2.sh
+
+query_v2-stage: ## Query the assisted-chat services using Response API v2 (stage environment)
+	@echo "Querying assisted-chat services using Response API v2 (stage environment)..."
+	QUERY_ENV=stage ./scripts/query_v2.sh
+
+query_v2-prod: ## Query the assisted-chat services using Response API v2 (production environment)
+	@echo "Querying assisted-chat services using Response API v2 (production environment)..."
+	QUERY_ENV=prod ./scripts/query_v2.sh
+
+streaming_query: ## Stream from assisted-chat services (Agent API v1, localhost)
+	@echo "Streaming from assisted-chat services (Agent API v1, localhost)..."
+	API_VERSION=v1 ./scripts/streaming_query.sh
+
+streaming_query_v2: ## Stream from assisted-chat services using Response API v2 (localhost)
+	@echo "Streaming from assisted-chat services using Response API v2 (localhost)..."
+	API_VERSION=v2 ./scripts/streaming_query.sh
+
+
+delete: ## Delete a conversation from assisted-chat services (Agent API v1)
+	@echo "Deleting conversation from assisted-chat services (Agent API v1)..."
 	DELETE_MODE=true ./scripts/query.sh
+
+delete_v2: ## Delete a conversation from assisted-chat services (Response API v2)
+	@echo "Deleting conversation from assisted-chat services (Response API v2)..."
+	DELETE_MODE=true ./scripts/query_v2.sh
 
 mcphost: ## Attach to mcphost
 	@echo "Attaching to mcphost..."
@@ -170,7 +202,7 @@ transcript-summaries-prod:
 
 help: ## Show this help message
 	@echo "Available targets:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_-]+:.*## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2}'
 	@echo ""
 	@echo "Example usage:"
 	@echo "  make build-images"
@@ -185,5 +217,6 @@ help: ## Show this help message
 	@echo "  make query"
 	@echo "  make query-int"
 	@echo "  make query-stage"
-	@echo "  make query-interactive"
+	@echo "  make query_v2"
+	@echo "  make query_v2-prod"
 	@echo "  make test-eval"
