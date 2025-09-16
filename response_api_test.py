@@ -90,9 +90,12 @@ async def test_responses_api(client, model_id):
         print(f"❌ Error with responses API: {e}")
 
 
-async def test_mcp_tools(client, model_id):
+async def test_mcp_tools(client, model_id, input_query, response_id=None):
     """Test responses API with MCP tools (similar to lightspeed-stack)."""
     print(f"🔧 Testing responses API with MCP tools using model: {model_id}")
+    print(f"📝 Query: {input_query}")
+    if response_id:
+        print(f"🔗 Using response ID: {response_id}")
     ocm_token = os.getenv("OCM_TOKEN")
 
     try:
@@ -104,16 +107,17 @@ async def test_mcp_tools(client, model_id):
             "provider": "vllm"
         }'
         """
-        response = await client.responses.create(
-            input="What assisted installer clusters do I have? Please use tools to get real data.",
-            model=model_id,
-            instructions=(
+        # Prepare the request parameters
+        request_params = {
+            "input": input_query,
+            "model": model_id,
+            "instructions": (
                 "You are a helpful assistant with access to tools. "
                 "When answering questions about clusters, resources, or infrastructure, "
                 "use the available tools to query the actual system state rather than "
                 "providing generic responses."
             ),
-            tools=[
+            "tools": [
                 {
                     "type": "mcp",
                     "server_label": "assisted",
@@ -125,8 +129,14 @@ async def test_mcp_tools(client, model_id):
                     }
                 }
             ],
-            store=True
-        )
+            "store": True
+        }
+        
+        # Add response_id if provided for chaining
+        if response_id:
+            request_params["previous_response_id"] = response_id
+            
+        response = await client.responses.create(**request_params)
         
         print("🛠️  MCP Tools Response:")
         print(f"  Response ID: {response.id}")
@@ -153,8 +163,12 @@ async def test_mcp_tools(client, model_id):
                 
         print()
         
+        # Return the response ID for chaining
+        return response.id
+        
     except Exception as e:
         print(f"❌ Error with MCP tools: {e}")
+        return None
 
 
 async def main():
@@ -221,9 +235,43 @@ async def main():
 
         # Test with MCP tools (if you want to test tool integration)
         # Note: This will only work if the MCP server is running
-        #print("🤔 Want to test MCP tools? (This requires the assisted-service-mcp container to be running)")
+        print("🤔 Testing MCP tools with chained queries (requires assisted-service-mcp container to be running)")
         try:
-            await test_mcp_tools(client, test_model)
+            # First query: Get existing clusters
+            print("\n" + "="*60)
+            print("🔍 QUERY 1: Getting existing clusters")
+            print("="*60)
+            response_id_1 = await test_mcp_tools(
+                client, 
+                test_model, 
+                "What assisted installer clusters do I have? Please use tools to get real data."
+            )
+            
+            # Second query: Ask about creating a cluster (chained with first response)
+            print("\n" + "="*60)
+            print("🏗️  QUERY 2: Asking about cluster creation")
+            print("="*60)
+            response_id_2 = await test_mcp_tools(
+                client, 
+                test_model, 
+                "can you create a cluster",
+                response_id_1
+            )
+            
+            # Third query: Provide cluster details (chained with second response)
+            print("\n" + "="*60)
+            print("📋 QUERY 3: Providing cluster details")
+            print("="*60)
+            response_id_3 = await test_mcp_tools(
+                client, 
+                test_model, 
+                "luis-test, 4.19.10, example.com, SNO",
+                response_id_2
+            )
+            
+            print("\n✅ All chained queries completed successfully!")
+            print(f"   Response IDs: {response_id_1} -> {response_id_2} -> {response_id_3}")
+            
         except Exception as e:
             print(f"⚠️  MCP tools test failed (expected if MCP server not accessible): {e}")
 
