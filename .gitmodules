@@ -16,3 +16,6 @@
 [submodule "llama-stack"]
 	path = llama-stack
 	url = https://github.com/meta-llama/llama-stack
+[submodule "llama-stack-client-python"]
+	path = llama-stack-client-python
+	url = https://github.com/llamastack/llama-stack-client-python
