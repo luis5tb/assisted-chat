@@ -48,7 +48,7 @@ def select_model_from_list(models):
     for i, model in enumerate(models, 1):
         print(f"  {i}. {model.identifier} ({model.provider_id})")
 
-    print(f"  {len(models) + 1}. Use default model (vllm/openai/gpt-oss-20b)")
+    print(f"  {len(models) + 1}. Use default model (vllm/openai/gpt-oss-120b)")
 
     while True:
         try:
@@ -62,7 +62,7 @@ def select_model_from_list(models):
 
             if choice_num == len(models) + 1:
                 # Use default model
-                default_model = "vllm/openai/gpt-oss-20b"
+                default_model = "vllm/openai/gpt-oss-120b"
                 print(f"✅ Using default model: {default_model}")
                 return default_model
             elif 1 <= choice_num <= len(models):
