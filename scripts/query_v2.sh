@@ -45,10 +45,10 @@ select_model() {
     local models_json="$1"
     IFS=$'\t' < <(jq -r '
         # Get all models
-        .models[] 
+        .models[]
 
         # Ignore models that are not LLMs, like embeddings
-        | select(.model_type == "llm") 
+        | select(.model_type == "llm")
 
         # Extract relevant fields
         | . as $model
@@ -85,7 +85,7 @@ get_conversation_history() {
     tmpfile=$(mktemp)
     status=$(curl --silent --show-error --output "$tmpfile" --write-out "%{http_code}" \
         -H "Authorization: Bearer ${OCM_TOKEN}" \
-        "${BASE_URL}/v2/conversations/${conversation_id}")
+        "${BASE_URL}/v3/conversations/${conversation_id}")
     body=$(cat "$tmpfile")
     rm "$tmpfile"
 
@@ -161,7 +161,7 @@ select_conversation() {
     tmpfile=$(mktemp)
     status=$(curl --silent --show-error --output "$tmpfile" --write-out "%{http_code}" \
         -H "Authorization: Bearer ${OCM_TOKEN}" \
-        "${BASE_URL}/v2/conversations")
+        "${BASE_URL}/v3/conversations")
     body=$(cat "$tmpfile")
     rm "$tmpfile"
 
@@ -232,7 +232,7 @@ select_conversation() {
         tmpfile=$(mktemp)
         status=$(curl --silent --show-error --output "$tmpfile" --write-out "%{http_code}" \
             -X DELETE -H "Authorization: Bearer ${OCM_TOKEN}" \
-            "${BASE_URL}/v2/conversations/${CONVERSATION_ID}")
+            "${BASE_URL}/v3/conversations/${CONVERSATION_ID}")
         body=$(cat "$tmpfile")
         rm "$tmpfile"
         if ! good_http_response "$status"; then
