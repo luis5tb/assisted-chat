@@ -114,6 +114,9 @@ parameters:
 - name: SYSTEM_PROMPT_PATH
   value: "/app-root/system_prompt"
   description: "Path for a file containing the system prompt to use"
+- name: AGENT_CARD_PATH
+  value: "/app-root/agent_card.yaml"
+  description: "Path for a file containing the agent card to use"
 - name: LLAMA_CLIENT_CONFIG_PATH
   value: "/app-root/llama_stack_client_config.yaml"
   description: "Path for a file with llama stack client config"
@@ -157,6 +160,7 @@ objects:
       service:
         host: 0.0.0.0
         port: ${SERVICE_PORT}
+        base_url: ${env.ASSISTED_CHAT_PUBLIC_BASE_URL}
         auth_enabled: ${LIGHTSPEED_SERVICE_AUTH_ENABLED}
         workers: ${LIGHTSPEED_SERVICE_WORKERS}
         color_log: ${LIGHTSPEED_SERVICE_COLOR_LOG}
@@ -185,6 +189,7 @@ objects:
       customization:
         system_prompt_path: "${SYSTEM_PROMPT_PATH}"
         disable_query_system_prompt: ${DISABLE_QUERY_SYSTEM_PROMPT}
+        agent_card_path: "${AGENT_CARD_PATH}"
       inference:
         default_model: ${ASSISTED_CHAT_DEFAULT_MODEL}
         default_provider: gemini

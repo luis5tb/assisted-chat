@@ -21,6 +21,8 @@ spec:
           value: assisted-chat
         - name: ASSISTED_CHAT_POSTGRES_NAME
           value: assisted-chat
+        - name: ASSISTED_CHAT_PUBLIC_BASE_URL
+          value: ${ASSISTED_CHAT_PUBLIC_BASE_URL}
         - name: VLLM_URL
           value: ${VLLM_URL}
         - name: VLLM_API_TOKEN
@@ -39,6 +41,9 @@ spec:
         - mountPath: /app-root/llama_stack_client_config.yaml
           name: config
           subPath: llama_stack_client_config.yaml
+        - mountPath: /app-root/agent_card.yaml
+          name: config
+          subPath: agentcard.yaml
         - mountPath: /tmp/systemprompt.txt
           name: config
           subPath: systemprompt.txt

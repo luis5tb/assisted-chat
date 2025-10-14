@@ -1,0 +1,106 @@
+# A2A Agent Card Configuration
+# This file defines the agent card for the A2A (Agent-to-Agent) protocol
+
+# Basic agent information
+name: "OpenShift Assisted Installer AI Assistant"
+description: "AI-powered assistant specialized in OpenShift cluster installation, configuration, and troubleshooting using assisted-installer backend"
+
+# Provider information
+provider:
+  organization: "Red Hat"
+  url: "https://redhat.com"
+
+# Agent capabilities
+capabilities:
+  streaming: true
+  pushNotifications: false
+  stateTransitionHistory: false
+
+# Default input and output modes
+defaultInputModes:
+  - "text/plain"
+
+defaultOutputModes:
+  - "text/plain"
+
+# Agent skills - define what the agent can do
+skills:
+  - id: "cluster_installation_guidance"
+    name: "Cluster Installation Guidance"
+    description: "Provide guidance and assistance for OpenShift cluster installation using assisted-installer"
+    tags:
+      - "openshift"
+      - "installation"
+      - "assisted-installer"
+    inputModes:
+      - "text/plain"
+      - "application/json"
+    outputModes:
+      - "text/plain"
+      - "application/json"
+    examples:
+      - "How do I install OpenShift using assisted-installer?"
+      - "What are the prerequisites for OpenShift installation?"
+
+  - id: "cluster_configuration_validation"
+    name: "Cluster Configuration Validation"
+    description: "Validate and provide recommendations for OpenShift cluster configuration parameters"
+    tags:
+      - "openshift"
+      - "configuration"
+      - "validation"
+    inputModes:
+      - "application/json"
+      - "text/plain"
+    outputModes:
+      - "application/json"
+      - "text/plain"
+    examples:
+      - "Validate my cluster configuration"
+      - "Check if my OpenShift setup meets requirements"
+
+  - id: "installation_troubleshooting"
+    name: "Installation Troubleshooting"
+    description: "Help troubleshoot OpenShift cluster installation issues and provide solutions"
+    tags:
+      - "openshift"
+      - "troubleshooting"
+      - "support"
+    inputModes:
+      - "text/plain"
+      - "application/json"
+    outputModes:
+      - "text/plain"
+      - "application/json"
+    examples:
+      - "My cluster installation is failing"
+      - "How do I fix installation errors?"
+
+  - id: "cluster_requirements_analysis"
+    name: "Cluster Requirements Analysis"
+    description: "Analyze infrastructure requirements for OpenShift cluster deployment"
+    tags:
+      - "openshift"
+      - "requirements"
+      - "planning"
+    inputModes:
+      - "application/json"
+      - "text/plain"
+    outputModes:
+      - "application/json"
+      - "text/plain"
+    examples:
+      - "What hardware do I need for OpenShift?"
+      - "Analyze requirements for a 5-node cluster"
+
+# Security configuration
+security:
+  - bearer: []
+
+security_schemes:
+  bearer:
+    type: "http"
+    scheme: "bearer"
+    bearer_format: "JWT"
+    description: "Bearer token for authentication with OpenShift services"
+
