@@ -24,7 +24,14 @@ providers:
       api_token: ${env.VLLM_API_TOKEN:=}
       tls_verify: ${env.VLLM_TLS_VERIFY:=true}
       refresh_models: ${env.VLLM_REFRESH_MODELS:=false}
-  vector_io: []
+  vector_io:
+  - provider_id: faiss
+    provider_type: inline::faiss
+    config:
+      kvstore:
+        type: sqlite
+        db_path: ${env.SQLITE_STORE_DIR:=/tmp/.llama/distributions/starter}/faiss_store.db
+        namespace: null
   files:
   - provider_id: meta-reference-files
     provider_type: inline::localfs
